@@ -1,0 +1,29 @@
+## Como funcionamos diferente
+
+### 1. Rastreamento automático de desatualização
+
+Um CI roda diariamente comparando nossos arquivos com os repositórios originais da `rust-lang`. Se um capítulo foi modificado no inglês, **uma issue é aberta automaticamente** com o diff e marcada como `desatualizado`. Nenhuma mudança passa despercebida.
+
+### 2. Governança explícita com rotação
+
+Cada repositório terá mantenedores com papéis definidos:
+
+| Papel | Responsabilidade |
+
+|---|---|
+
+| **Mantenedor** | Revisa PRs, mantém o glossário, garante qualidade e consistência |
+
+| **Revisor** | Revisa PRs de tradução sem acesso de escrita |
+
+| **Contribuidor** | Qualquer pessoa com um PR aceito |
+
+Mantenedores que ficarem **mais de 3 meses sem atividade** são movidos para Alumni e o papel é aberto para novos voluntários. Isso não é punição, é garantia de que o projeto não dependa de uma única pessoa.
+
+Veja os detalhes completos em [GOVERNANCE.md](./GOVERNANCE.md).
+
+### 3. Glossário unificado e obrigatório
+
+Um dos maiores problemas de traduções colaborativas é inconsistência. _Ownership_ vira "propriedade" em um capítulo e "posse" em outro. Aqui existe um **glossário oficial** que todos os PRs devem seguir. Divergências são discutidas em issues abertas e decididas coletivamente antes de virar norma.
+
+O glossário vive em [GLOSSARY.md](./GLOSSARY.md) e é versionado como qualquer outro arquivo.
