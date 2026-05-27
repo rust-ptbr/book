@@ -1,0 +1,111 @@
+name: Rastreamento de Desatualização do Rust Book
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  verificar-mudancas:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Checkout do Repositório Local
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Buscar atualizações do Rust-Lang
+        run: |
+          git remote add upstream https://github.com/rust-lang/rust-book.git
+          git fetch upstream main
+
+      - name: Verificar Diff e Gerenciar Issues
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Captura o hash do commit mais recente do repositório original
+          UPSTREAM_COMMIT=$(git rev-parse upstream/main)
+
+          # Gera o diff focado na pasta de conteúdo
+          DIFF_CONTENT=$(git diff HEAD upstream/main -- src/)
+
+          if [ -z "$DIFF_CONTENT" ]; then
+            echo "Nenhuma alteração encontrada no livro original."
+            exit 0
+          fi
+
+          echo "Alterações detectadas!"
+          FILES_CHANGED=$(git diff HEAD upstream/main --name-status -- src/)
+
+          # Trunca o diff caso ultrapasse o limite de caracteres do GitHub (65.536)
+          DIFF_DISPLAY=$(echo "$DIFF_CONTENT" | head -c 60000)
+          if [ ${#DIFF_CONTENT} -gt 60000 ]; then
+            DIFF_DISPLAY+=$'\n\n... (diff truncado por ser muito extenso — veja o commit de referência para o diff completo)'
+          fi
+
+          # Busca se já existe uma issue aberta com a label correspondente
+          EXISTING_ISSUE=$(gh issue list --label "desatualizado" --state open --json number -q '.[0].number')
+
+          if [ -n "$EXISTING_ISSUE" ]; then
+            echo "Já existe uma issue aberta (#$EXISTING_ISSUE)."
+
+            # Baixa o texto completo da issue para inspecionar o commit registrado
+            ISSUE_TEXT=$(gh issue view "$EXISTING_ISSUE" --json body,comments -q '.body + " " + (.comments | map(.body) | join(" "))')
+
+            # Se o hash do commit atual da rust-lang já estiver no texto da issue ou dos comentários,
+            # nada mudou desde o último alerta
+            if [[ "$ISSUE_TEXT" == *"$UPSTREAM_COMMIT"* ]]; then
+              echo "O commit mais recente ($UPSTREAM_COMMIT) já foi processado anteriormente. Encerrando sem flodar."
+              exit 0
+            fi
+
+            echo "Nova alteração detectada na rust-lang (Novo Commit: $UPSTREAM_COMMIT). Inserindo comentário..."
+
+            COMMENT_BODY=$(cat <<EOF
+🔄 **Nova atualização subsequente detectada no repositório original!**
+
+O texto em inglês sofreu novas modificações adicionais.
+
+**Commit de referência:** \`$UPSTREAM_COMMIT\`
+
+### 🔍 Novo Diff das Alterações:
+\`\`\`diff
+$DIFF_DISPLAY
+\`\`\`
+EOF
+)
+
+            gh issue comment "$EXISTING_ISSUE" --body "$COMMENT_BODY"
+
+          else
+            echo "Nenhuma issue aberta encontrada. Criando novo registro..."
+
+            ISSUE_BODY=$(cat <<EOF
+## ⚠️ Texto Original Atualizado na Rust-Lang!
+
+Os arquivos originais em inglês foram modificados. É necessário revisar as traduções correspondentes.
+
+**Commit original de referência:** \`$UPSTREAM_COMMIT\`
+
+### 📋 Arquivos Modificados:
+\`\`\`text
+$FILES_CHANGED
+\`\`\`
+
+### 🔍 Diff das Alterações:
+\`\`\`diff
+$DIFF_DISPLAY
+\`\`\`
+
+_Aviso automático gerado por GitHub Actions._
+EOF
+)
+
+            gh issue create \
+              --title "⚠️ Texto Original Atualizado - Revisão Necessária" \
+              --body "$ISSUE_BODY" \
+              --label "desatualizado"
+          fi
