@@ -1,107 +1,115 @@
-# The Rust Programming Language
+<div align="center">
 
-![Build Status](https://github.com/rust-lang/book/workflows/CI/badge.svg)
+# 📖 The Book — A Linguagem de Programação Rust
 
-This repository contains the source of "The Rust Programming Language" book.
+**Tradução colaborativa do livro oficial do Rust para o português brasileiro.**
 
-[The book is available in dead-tree form from No Starch Press][nostarch].
+[![Status](https://img.shields.io/badge/status-em%20andamento-yellow?style=flat-square)](https://github.com/rust-ptbr/book/issues)
+[![Licença](https://img.shields.io/badge/licença-MIT%20%2F%20Apache--2.0-blue?style=flat-square)](./LICENSE)
+[![Contribuições abertas](https://img.shields.io/badge/contribuições-abertas-brightgreen?style=flat-square)](./CONTRIBUTING.md)
 
-[nostarch]: https://nostarch.com/rust-programming-language-2nd-edition
+Parte da iniciativa [**rust-ptbr**](https://github.com/rust-ptbr) — traduções da documentação oficial do Rust com compromisso de longo prazo.
 
-You can also read the book for free online. Please see the book as shipped with
-the latest [stable], [beta], or [nightly] Rust releases. Be aware that issues
-in those versions may have been fixed in this repository already, as those
-releases are updated less frequently.
+</div>
 
-[stable]: https://doc.rust-lang.org/stable/book/
-[beta]: https://doc.rust-lang.org/beta/book/
-[nightly]: https://doc.rust-lang.org/nightly/book/
+---
 
-See the [releases] to download just the code of all the code listings that appear in the book.
+## Sobre este repositório
 
-[releases]: https://github.com/rust-lang/book/releases
+Este repositório contém a tradução para o português brasileiro do livro [*The Rust Programming Language*](https://github.com/rust-lang/book), a referência oficial da linguagem, mantida pela `rust-lang`.
 
-## Requirements
+A tradução vive em `src-ptbr/` e segue a estrutura do original. O objetivo é que qualquer pessoa que leia em português tenha a mesma experiência de qualidade de quem lê em inglês — sem atraso, sem inconsistência de termos, e sem depender de uma única pessoa para continuar existindo.
 
-Building the book requires [mdBook], ideally the same version that
-rust-lang/rust uses in [this file][rust-mdbook]. To get it:
+> **Este projeto está nos estágios iniciais.** A tradução ainda não começou e estamos construindo a infraestrutura e as convenções antes de abrir para contribuições em larga escala. Acompanhe as [issues abertas](https://github.com/rust-ptbr/book/issues) para ver como entrar.
 
-[mdBook]: https://github.com/rust-lang/mdBook
-[rust-mdbook]: https://github.com/rust-lang/rust/blob/HEAD/src/tools/rustbook/Cargo.toml
+---
+
+## Como funciona este projeto
+
+### Rastreamento automático de desatualização
+
+Um CI roda diariamente comparando os arquivos de `src-ptbr/` com o repositório original da `rust-lang`. Se um capítulo for modificado no inglês, **uma issue é aberta automaticamente** com o diff detalhado e marcada como `desatualizado`. Nenhuma mudança no upstream passa despercebida.
+
+### Governança com rotação de mantenedores
+
+| Papel | Responsabilidade |
+|---|---|
+| **Mantenedor** | Revisa PRs, mantém o glossário, garante qualidade e consistência |
+| **Revisor** | Revisa PRs de tradução sem acesso de escrita |
+| **Contribuidor** | Qualquer pessoa com um PR aceito |
+
+Mantenedores que ficarem **mais de 3 meses sem atividade** são movidos para Alumni e o papel é aberto para novos voluntários. Isso garante que o projeto não dependa de uma única pessoa.
+
+> O documento de governança completo (`GOVERNANCE.md`) está sendo redigido e será publicado em breve.
+
+### Glossário unificado e obrigatório
+
+*Ownership* não pode virar "propriedade" em um capítulo e "posse" em outro. Aqui existe um **glossário oficial** que todos os PRs devem seguir. Divergências são discutidas em issues abertas e decididas coletivamente antes de virarem norma.
+
+> O glossário (`GLOSSARY.md`) ainda está sendo construído. Quer ajudar a defini-lo? [Abra uma issue](https://github.com/rust-ptbr/book/issues/new).
+
+---
+
+## Como contribuir
+
+Você não precisa ser expert em Rust para ajudar. Este é o melhor momento para entrar — as bases do projeto ainda estão sendo construídas.
+
+**O que precisa ser feito agora:**
+
+- Definir e revisar o glossário de termos técnicos
+- Redigir o `GOVERNANCE.md` com as regras do projeto
+- Redigir o `CONTRIBUTING.md` com o guia para novos contribuidores
+- Começar a tradução dos primeiros capítulos em `src-ptbr/`
+
+Acompanhe as [issues abertas](https://github.com/rust-ptbr/book/issues) para ver o que está pendente ou abra uma nova com sua sugestão.
+
+---
+
+## Construindo o livro localmente
+
+O livro usa [mdBook](https://github.com/rust-lang/mdBook). Para instalar:
 
 ```bash
-$ cargo install mdbook --locked --version <version_num>
+cargo install mdbook --locked
 ```
 
-## Building
-
-To build the book, type:
+Para gerar e visualizar:
 
 ```bash
-$ mdbook build
+mdbook build
+mdbook serve --open
 ```
 
-The output will be in the `book` subdirectory. To check it out, open it in
-your web browser.
+O resultado estará disponível em `http://localhost:3000`.
 
-_Firefox:_
+---
 
-```bash
-$ firefox book/index.html                       # Linux
-$ open -a "Firefox" book/index.html             # OS X
-$ Start-Process "firefox.exe" .\book\index.html # Windows (PowerShell)
-$ start firefox.exe .\book\index.html           # Windows (Cmd)
+## Estrutura do repositório
+
+```
+.
+├── src/           # Fonte original em inglês (referência, não edite)
+├── src-ptbr/      # Tradução em português brasileiro (em construção)
+├── GLOSSARY.md    # Glossário oficial de termos técnicos (em breve)
+├── GOVERNANCE.md  # Regras de governança e papéis (em breve)
+└── CONTRIBUTING.md
 ```
 
-_Chrome:_
+---
 
-```bash
-$ google-chrome book/index.html                 # Linux
-$ open -a "Google Chrome" book/index.html       # OS X
-$ Start-Process "chrome.exe" .\book\index.html  # Windows (PowerShell)
-$ start chrome.exe .\book\index.html            # Windows (Cmd)
-```
+## Licença
 
-To run the tests:
+O código-fonte dos exemplos é distribuído sob as licenças [MIT](./LICENSE-MIT) e [Apache 2.0](./LICENSE-APACHE), seguindo a mesma política do [rust-lang.org](https://rust-lang.org/).
 
-```bash
-$ cd packages/trpl
-$ mdbook test --library-path packages/trpl/target/debug/deps
-```
+O texto do livro segue a licença [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
 
-## Contributing
+---
 
-We'd love your help! Please see [CONTRIBUTING.md][contrib] to learn about the
-kinds of contributions we're looking for.
-
-[contrib]: https://github.com/rust-lang/book/blob/main/CONTRIBUTING.md
-
-Because the book is [printed][nostarch], and because we want
-to keep the online version of the book close to the print version when
-possible, it may take longer than you're used to for us to address your issue
-or pull request.
-
-So far, we've been doing a larger revision to coincide with [Rust Editions](https://doc.rust-lang.org/edition-guide/). Between those larger
-revisions, we will only be correcting errors. If your issue or pull request
-isn't strictly fixing an error, it might sit until the next time that we're
-working on a large revision: expect on the order of months or years. Thank you
-for your patience!
-
-### Translations
-
-We'd love help translating the book! See the [Translations] label to join in
-efforts that are currently in progress. Open a new issue to start working on
-a new language! We're waiting on [mdbook support] for multiple languages
-before we merge any in, but feel free to start!
-
-[Translations]: https://github.com/rust-lang/book/issues?q=is%3Aopen+is%3Aissue+label%3ATranslations
-[mdbook support]: https://github.com/rust-lang/mdBook/issues/5
-
-## Spellchecking
-
-To scan source files for spelling errors, you can use the `spellcheck.sh`
-script available in the `ci` directory. It needs a dictionary of valid words,
-which is provided in `ci/dictionary.txt`. If the script produces a false
-positive (say, you used the word `BTreeMap` which the script considers invalid),
-you need to add this word to `ci/dictionary.txt` (keep the sorted order for
-consistency).
+<p align="center">
+  Feito com 🦀 pela comunidade brasileira de Rust
+  <br>
+  <a href="https://github.com/rust-ptbr">rust-ptbr</a> ·
+  <a href="./GOVERNANCE.md">Governança</a> ·
+  <a href="./GLOSSARY.md">Glossário</a> ·
+  <a href="./CONTRIBUTING.md">Como contribuir</a>
+</p>
